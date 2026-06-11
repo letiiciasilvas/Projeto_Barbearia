@@ -1,4 +1,5 @@
 const BaseRepository = require('./BaseRepository');
+const Agendamento = require('../model/Agendamento');
 
 class AgendamentoRepository extends BaseRepository {
     constructor() {
@@ -37,7 +38,8 @@ class AgendamentoRepository extends BaseRepository {
 
         sql += ` ORDER BY a.data_hora DESC`;
 
-        return this.dbQuery.all(sql, params);
+        const rows = await this.dbQuery.all(sql, params);
+        return rows.map(row => Agendamento.fromRow(row));
     }
 
     async findById(id) {
@@ -53,7 +55,8 @@ class AgendamentoRepository extends BaseRepository {
             JOIN servicos s ON a.servico_id = s.id
             WHERE a.id = ?
         `;
-        return this.dbQuery.get(sql, [id]);
+        const row = await this.dbQuery.get(sql, [id]);
+        return Agendamento.fromRow(row);
     }
 
     async create(agendamentoData) {
@@ -99,7 +102,8 @@ class AgendamentoRepository extends BaseRepository {
             ORDER BY a.data_hora ASC
             LIMIT ?
         `;
-        return this.dbQuery.all(sql, [limit]);
+        const rows = await this.dbQuery.all(sql, [limit]);
+        return rows.map(row => Agendamento.fromRow(row));
     }
 
     async countByStatus(status) {
