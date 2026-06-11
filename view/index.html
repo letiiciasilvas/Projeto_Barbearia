@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Barbearia Fio Da Navalha</title>
+    <script>
+        // Redirecionador rápido de sessão
+        const token = localStorage.getItem('fio_navalha_token');
+        if (token) {
+            window.location.href = '/dashboard.html';
+        } else {
+            window.location.href = '/login.html';
+        }
+    </script>
+</head>
+<body>
+    <p style="text-align: center; margin-top: 50px; font-family: sans-serif; color: #666;">
+        Carregando sistema...
+    </p>
+</body>
+</html>
