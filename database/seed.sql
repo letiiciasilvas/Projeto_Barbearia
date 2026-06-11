@@ -51,6 +51,10 @@ INSERT INTO agendamentos (id, cliente_id, colaborador_id, servico_id, data_hora,
 (5, 5, 2, 5, '2026-06-08 09:00:00', 'CONCLUIDO'),
 (6, 6, 3, 3, '2026-06-09 15:00:00', 'CONCLUIDO'),
 (7, 7, 1, 2, '2026-06-10 10:30:00', 'CONCLUIDO'),
+-- Agendamentos adicionais concluidos para faturamento positivo
+(13, 1, 2, 7, '2026-06-07 15:00:00', 'CONCLUIDO'),
+(14, 2, 3, 5, '2026-06-10 18:00:00', 'CONCLUIDO'),
+(15, 6, 1, 7, '2026-06-09 10:00:00', 'CONCLUIDO'),
 -- Agendamentos Futuros ou Recentes pendentes
 (8, 1, 2, 5, '2026-06-12 14:00:00', 'PENDENTE'),
 (9, 3, 1, 1, '2026-06-12 10:00:00', 'PENDENTE'),
@@ -68,6 +72,10 @@ INSERT INTO financeiro (agendamento_id, tipo, valor, descricao, data) VALUES
 (5, 'RECEITA', 85.00, 'Serviço: Cabelo + Barba - Cliente: Rodrigo Alves', '2026-06-08'),
 (6, 'RECEITA', 35.00, 'Serviço: Barba Clássica - Cliente: Gabriel Costa', '2026-06-09'),
 (7, 'RECEITA', 55.00, 'Serviço: Corte Moderno - Cliente: Thiago Santos', '2026-06-10'),
+-- Receitas adicionais
+(13, 'RECEITA', 90.00, 'Serviço: Selagem / Progressiva - Cliente: Carlos Silva', '2026-06-07'),
+(14, 'RECEITA', 85.00, 'Serviço: Cabelo + Barba (Combo) - Cliente: Marcos Souza', '2026-06-10'),
+(15, 'RECEITA', 90.00, 'Serviço: Selagem / Progressiva - Cliente: Gabriel Costa', '2026-06-09'),
 -- Despesas avulsas
 (NULL, 'DESPESA', 120.00, 'Compra de lâminas de barbear e loções', '2026-06-06'),
 (NULL, 'DESPESA', 80.00, 'Produtos de higienização do salão', '2026-06-08'),
