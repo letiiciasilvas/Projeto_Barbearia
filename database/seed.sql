@@ -12,7 +12,8 @@ DELETE FROM sqlite_sequence WHERE name IN ('usuarios', 'clientes', 'colaboradore
 -- Inserir Usuários (senha default: admin123, hash: salt:hash)
 INSERT INTO usuarios (nome, email, senha, role) VALUES 
 ('Admin Fio da Navalha', 'admin@fiodanavalha.com.br', '0cf6d83becc5ada7da39001a65741a86:c37fdb72250fcd4db68ef3927e3028c9102117b93fb1a60df9b36535f6db7db44fbb438636381464a18698adf6f412bea7625724a2ca57047f3d1a61909ebc9f', 'ADMIN'),
-('Atendente Fio da Navalha', 'atendente@fiodanavalha.com.br', '0cf6d83becc5ada7da39001a65741a86:c37fdb72250fcd4db68ef3927e3028c9102117b93fb1a60df9b36535f6db7db44fbb438636381464a18698adf6f412bea7625724a2ca57047f3d1a61909ebc9f', 'OPERADOR');
+('Atendente Fio da Navalha', 'atendente@fiodanavalha.com.br', '0cf6d83becc5ada7da39001a65741a86:c37fdb72250fcd4db68ef3927e3028c9102117b93fb1a60df9b36535f6db7db44fbb438636381464a18698adf6f412bea7625724a2ca57047f3d1a61909ebc9f', 'OPERADOR'),
+('Leticia Gomes', 'leticia123silvas@gmail.com', '949a006297aa749d7fc0005b825dc272:0a2c13a44d0de024a6eb79b06767870ef88298bd6eebf00157730463d4aa642a9ee3dd8b029e55f4225663175131a8ad947fdda24ab9f1e5eb626b64c964a182', 'ADMIN');
 
 -- Inserir Clientes
 INSERT INTO clientes (nome, email, telefone) VALUES 
