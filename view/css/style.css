@@ -1836,8 +1836,24 @@ input[type="datetime-local"] {
     box-shadow: 0 0 0 2px var(--accent-blue);
 }
 
+.light-theme .landing-navbar {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-bottom: 1px solid var(--border-color);
+}
+
 .light-theme .landing-hero {
-    background-color: #0b0f19; /* mantém o hero escuro de forma intencional para visual sofisticado */
+    background: linear-gradient(rgba(248, 250, 252, 0.82), rgba(248, 250, 252, 0.98)),
+                url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=1920') no-repeat center center/cover;
+}
+
+.light-theme .hero-content h1 {
+    background: linear-gradient(135deg, #0f172a 30%, #0284c7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.light-theme .hero-subtitle {
+    color: #475569;
 }
 
 .light-theme .landing-info {
