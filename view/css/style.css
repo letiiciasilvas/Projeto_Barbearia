@@ -1893,6 +1893,25 @@ input[type="datetime-local"] {
     border-top: 1px solid var(--border-color);
 }
 
+/* Overrides de Badges para o Tema Claro */
+.light-theme .badge-success {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: #065f46; /* Verde mais forte e legível */
+    border: 1px solid rgba(16, 185, 129, 0.5);
+}
+
+.light-theme .badge-danger {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #991b1b; /* Vermelho mais forte e legível */
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.light-theme .badge-pending {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #92400e; /* Amarelo/Laranja mais forte e legível */
+    border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
 /* ==========================================================================
    GOOGLE ACCOUNTS SELECTOR POPUP STYLES
    ========================================================================== */
