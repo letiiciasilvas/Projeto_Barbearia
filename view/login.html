@@ -140,14 +140,74 @@
         </div>
     </div>
 
-    <!-- MOCK DE GOOGLE AUTH MODAL -->
+    <!-- INTERACTIVE MOCK GOOGLE AUTH MODAL -->
     <div class="modal-backdrop d-none" id="googleMockModal">
-        <div class="modal-card modal-sm text-center" style="padding: 30px 20px; gap: 15px;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google Logo" width="48" height="48" style="margin: 0 auto; animation: pulse 1.5s infinite;">
-            <h2>Fazendo login com Google</h2>
-            <p class="text-muted" style="font-size: 0.85rem;">Conectando com sua Conta do Google...</p>
-            <div style="font-size: 1.5rem; color: var(--accent-blue);">
-                <i class="fa-solid fa-circle-notch fa-spin"></i>
+        <div class="modal-card google-account-card">
+            <div class="google-modal-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google Logo" width="75">
+                <h3>Escolha uma conta</h3>
+                <p>para prosseguir para a <strong>Barbearia Fio Da Navalha</strong></p>
+            </div>
+            
+            <div class="google-accounts-list" id="googleAccountsList">
+                <!-- Account 1 -->
+                <div class="google-account-item" onclick="selectGoogleAccount('leticia123silvas@gmail.com', 'Leticia Gomes')">
+                    <div class="google-avatar" style="background-color: #4f46e5;">L</div>
+                    <div class="google-account-details">
+                        <span class="google-name">Leticia Gomes</span>
+                        <span class="google-email">leticia123silvas@gmail.com</span>
+                    </div>
+                </div>
+                <!-- Account 2 -->
+                <div class="google-account-item" onclick="selectGoogleAccount('carlos.silva@email.com', 'Carlos Silva')">
+                    <div class="google-avatar" style="background-color: #0ea5e9;">C</div>
+                    <div class="google-account-details">
+                        <span class="google-name">Carlos Silva</span>
+                        <span class="google-email">carlos.silva@email.com</span>
+                    </div>
+                </div>
+                <!-- Account 3 -->
+                <div class="google-account-item" onclick="selectGoogleAccount('marcos.souza@email.com', 'Marcos Souza')">
+                    <div class="google-avatar" style="background-color: #10b981;">M</div>
+                    <div class="google-account-details">
+                        <span class="google-name">Marcos Souza</span>
+                        <span class="google-email">marcos.souza@email.com</span>
+                    </div>
+                </div>
+                <!-- Add Another Account -->
+                <div class="google-account-item" onclick="showGoogleCustomEmailInput()">
+                    <div class="google-avatar" style="background-color: #6b7280;"><i class="fa-solid fa-user-plus" style="font-size: 0.95rem;"></i></div>
+                    <div class="google-account-details">
+                        <span class="google-name" style="font-weight: 500;">Usar outra conta</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Email Form (Hidden by default) -->
+            <div class="google-custom-form d-none" id="googleCustomForm">
+                <div class="form-group" style="text-align: left; margin-bottom: 15px;">
+                    <label for="googleCustomEmail" style="color: #4b5563; font-size: 0.8rem; font-weight: 500;">E-mail do Google</label>
+                    <input type="email" id="googleCustomEmail" placeholder="exemplo@gmail.com" style="background-color: #f3f4f6; color: #1f2937; border: 1px solid #d1d5db; padding: 12px 15px; border-radius: 6px; width: 100%; font-size: 0.95rem;" required>
+                </div>
+                <div class="form-group" style="text-align: left; margin-bottom: 20px;">
+                    <label for="googleCustomName" style="color: #4b5563; font-size: 0.8rem; font-weight: 500;">Nome Completo</label>
+                    <input type="text" id="googleCustomName" placeholder="Seu Nome" style="background-color: #f3f4f6; color: #1f2937; border: 1px solid #d1d5db; padding: 12px 15px; border-radius: 6px; width: 100%; font-size: 0.95rem;" required>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="button" class="btn btn-secondary" onclick="hideGoogleCustomEmailInput()" style="flex: 1; background-color: #e5e7eb; color: #374151; border: none; font-size: 0.9rem;">Voltar</button>
+                    <button type="button" class="btn btn-primary" onclick="submitGoogleCustomAccount()" style="flex: 1; background-color: #1a73e8; border: none; font-size: 0.9rem; color: white;">Avançar</button>
+                </div>
+            </div>
+
+            <div class="google-modal-loading d-none" id="googleModalLoading" style="padding: 20px 0; text-align: center;">
+                <div style="font-size: 1.5rem; color: #1a73e8;">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                </div>
+                <p class="text-muted" style="font-size: 0.8rem; margin-top: 10px;">Fazendo login com Google...</p>
+            </div>
+
+            <div class="google-modal-footer">
+                <button type="button" class="btn-google-cancel" onclick="closeGoogleModal()">Cancelar</button>
             </div>
         </div>
     </div>
@@ -303,42 +363,88 @@
             }
         });
 
-        // GOOGLE LOGIN (MOCK COMPACTO)
+        // GOOGLE LOGIN (INTERACTIVE ACCOUNT SELECTOR)
         document.getElementById('btnGoogleLogin').addEventListener('click', () => {
             errorAlert.classList.add('d-none');
+            successAlert.classList.add('d-none');
+            document.getElementById('googleAccountsList').classList.remove('d-none');
+            document.getElementById('googleCustomForm').classList.add('d-none');
+            document.getElementById('googleModalLoading').classList.add('d-none');
             document.getElementById('googleMockModal').classList.remove('d-none');
+        });
 
-            // Simular comunicação com o Google OAuth
-            setTimeout(async () => {
-                document.getElementById('googleMockModal').classList.add('d-none');
+        window.closeGoogleModal = function() {
+            document.getElementById('googleMockModal').classList.add('d-none');
+        };
+
+        window.showGoogleCustomEmailInput = function() {
+            document.getElementById('googleAccountsList').classList.add('d-none');
+            document.getElementById('googleCustomForm').classList.remove('d-none');
+        };
+
+        window.hideGoogleCustomEmailInput = function() {
+            document.getElementById('googleAccountsList').classList.remove('d-none');
+            document.getElementById('googleCustomForm').classList.add('d-none');
+        };
+
+        window.selectGoogleAccount = async function(email, nome) {
+            document.getElementById('googleAccountsList').classList.add('d-none');
+            document.getElementById('googleModalLoading').classList.remove('d-none');
+            await executarLoginGoogle(email, nome);
+        };
+
+        window.submitGoogleCustomAccount = async function() {
+            const email = document.getElementById('googleCustomEmail').value.trim();
+            const nome = document.getElementById('googleCustomName').value.trim();
+
+            if (!email || !nome) {
+                alert('Por favor, preencha o e-mail e o nome para prosseguir.');
+                return;
+            }
+
+            document.getElementById('googleCustomForm').classList.add('d-none');
+            document.getElementById('googleModalLoading').classList.remove('d-none');
+            await executarLoginGoogle(email, nome);
+        };
+
+        async function executarLoginGoogle(email, nome) {
+            try {
+                const response = await fetch('/api/auth/google', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, nome })
+                });
+
+                const result = await response.json();
                 
-                try {
-                    // Para o teste do Google, vamos logar com a conta pré-semeada do Carlos Silva (Cliente ID 1)
-                    // que possui email carlos.silva@email.com e senha carlos123
-                    const response = await fetch('/api/auth/login', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: 'carlos.silva@email.com', senha: 'carlos123' })
-                    });
+                setTimeout(() => {
+                    closeGoogleModal();
                     
-                    const result = await response.json();
-                    if (!result.success) throw new Error(result.message);
+                    if (!result.success) {
+                        showError(result.message || 'Erro ao realizar login com Google.');
+                        return;
+                    }
 
-                    // Alterar nome no front-end para mostrar que foi do Google
+                    // Adicionar indicador de login via Google no front
                     result.user.nome = result.user.nome + " (Google)";
                     localStorage.setItem('fio_navalha_token', result.token);
                     localStorage.setItem('fio_navalha_user', JSON.stringify(result.user));
 
                     showSuccess('Login do Google bem-sucedido!');
                     setTimeout(() => {
-                        window.location.href = '/client_portal.html';
+                        if (result.user.role === 'CLIENTE') {
+                            window.location.href = '/client_portal.html';
+                        } else {
+                            window.location.href = '/dashboard.html';
+                        }
                     }, 800);
+                }, 1200);
 
-                } catch (e) {
-                    showError('Falha na autenticação do Google Mock: ' + e.message);
-                }
-            }, 1500);
-        });
+            } catch (e) {
+                closeGoogleModal();
+                showError('Falha na autenticação do Google Mock: ' + e.message);
+            }
+        }
 
         function showError(msg) {
             errorMessage.innerHTML = msg;

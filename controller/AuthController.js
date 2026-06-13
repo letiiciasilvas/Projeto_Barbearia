@@ -52,6 +52,25 @@ class AuthController {
         }
     }
 
+    async googleLogin(req, res) {
+        try {
+            const { email, nome } = req.body;
+            if (!email || !nome) {
+                return res.status(400).json({ success: false, message: 'E-mail e nome são obrigatórios.' });
+            }
+
+            const result = await authService.googleLogin(email, nome);
+            return res.status(200).json({
+                success: true,
+                message: 'Login com Google realizado com sucesso.',
+                token: result.token,
+                user: result.user
+            });
+        } catch (error) {
+            return res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
     // Middleware de verificação de token (usado para rotas protegidas)
     static verificarTokenMiddleware(req, res, next) {
         const authHeader = req.headers.authorization;

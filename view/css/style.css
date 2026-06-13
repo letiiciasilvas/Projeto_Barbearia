@@ -1877,3 +1877,128 @@ input[type="datetime-local"] {
     border-top: 1px solid var(--border-color);
 }
 
+/* ==========================================================================
+   GOOGLE ACCOUNTS SELECTOR POPUP STYLES
+   ========================================================================== */
+
+.google-account-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 380px;
+    width: 90%;
+    color: #202124 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    border: 1px solid #dadce0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.google-modal-header {
+    text-align: center;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.google-modal-header img {
+    margin-bottom: 5px;
+}
+
+.google-modal-header h3 {
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: #202124;
+    font-family: 'Roboto', 'Inter', sans-serif;
+}
+
+.google-modal-header p {
+    font-size: 0.85rem;
+    color: #5f6368;
+    margin-top: 0;
+}
+
+.google-accounts-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.google-account-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #dadce0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: #ffffff;
+}
+
+.google-account-item:last-child {
+    border-bottom: none;
+}
+
+.google-account-item:hover {
+    background-color: #f8f9fa;
+}
+
+.google-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #e8eaed;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-right: 12px;
+}
+
+.google-account-details {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.google-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #3c4043;
+}
+
+.google-email {
+    font-size: 0.75rem;
+    color: #5f6368;
+}
+
+.google-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 5px;
+    border-top: none !important;
+    padding: 0 !important;
+}
+
+.btn-google-cancel {
+    background: none;
+    border: none;
+    color: #1a73e8;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.btn-google-cancel:hover {
+    background-color: #f8f9fa;
+}
+

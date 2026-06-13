@@ -85,6 +85,43 @@ class AuthService {
         };
     }
 
+    // Realiza o login/cadastro via Google OAuth Mock
+    async googleLogin(email, nome) {
+        let user = await userRepo.findByEmail(email);
+        
+        if (!user) {
+            // Se não existir, cadastrar automaticamente como CLIENTE
+            const randomPassword = crypto.randomBytes(16).toString('hex');
+            const hashedPassword = AuthService.hashPassword(randomPassword);
+            const ids = await userRepo.registrarCliente(nome, email, '(11) 99999-9999', hashedPassword);
+            
+            user = {
+                id: ids.userId,
+                nome,
+                email,
+                role: 'CLIENTE',
+                cliente_id: ids.clienteId
+            };
+        }
+        
+        const token = jwt.sign(
+            { id: user.id, nome: user.nome, email: user.email, role: user.role, cliente_id: user.cliente_id },
+            JWT_SECRET,
+            { expiresIn: '8h' }
+        );
+        
+        return {
+            token,
+            user: {
+                id: user.id,
+                nome: user.nome,
+                email: user.email,
+                role: user.role,
+                cliente_id: user.cliente_id
+            }
+        };
+    }
+
     // Valida um token JWT recebido
     static verifyToken(token) {
         try {

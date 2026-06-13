@@ -35,6 +35,7 @@ const finCtrl = new FinanceiroController();
 // --- Rotas Públicas ---
 app.post('/api/auth/login', (req, res) => authCtrl.login(req, res));
 app.post('/api/auth/register', (req, res) => authCtrl.register(req, res));
+app.post('/api/auth/google', (req, res) => authCtrl.googleLogin(req, res));
 
 // --- Rotas Protegidas por JWT ---
 const authMiddleware = AuthController.verificarTokenMiddleware;
