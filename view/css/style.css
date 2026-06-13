@@ -1842,7 +1842,7 @@ input[type="datetime-local"] {
 }
 
 .light-theme .landing-hero {
-    background: linear-gradient(rgba(248, 250, 252, 0.82), rgba(248, 250, 252, 0.98)),
+    background: linear-gradient(rgba(248, 250, 252, 0.4), rgba(248, 250, 252, 0.75)),
                 url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&q=80&w=1920') no-repeat center center/cover;
 }
 
