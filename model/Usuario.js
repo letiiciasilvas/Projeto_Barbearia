@@ -1,16 +1,17 @@
 class Usuario {
-    constructor(id, nome, email, senha, role, created_at) {
+    constructor(id, nome, email, senha, role, cliente_id, created_at) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.role = role;
+        this.cliente_id = cliente_id;
         this.created_at = created_at;
     }
 
     static fromRow(row) {
         if (!row) return null;
-        return new Usuario(row.id, row.nome, row.email, row.senha, row.role, row.created_at);
+        return new Usuario(row.id, row.nome, row.email, row.senha, row.role, row.cliente_id, row.created_at);
     }
 
     toJSON() {
@@ -19,6 +20,7 @@ class Usuario {
             nome: this.nome,
             email: this.email,
             role: this.role,
+            cliente_id: this.cliente_id,
             created_at: this.created_at
         };
     }

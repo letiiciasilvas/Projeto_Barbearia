@@ -28,6 +28,30 @@ class AuthController {
         }
     }
 
+    async register(req, res) {
+        try {
+            const validation = UserDTO.validateRegister(req.body);
+            if (!validation.isValid) {
+                return res.status(400).json({ success: false, errors: validation.errors });
+            }
+
+            const { nome, email, telefone, senha } = validation.data;
+            const result = await authService.register(nome, email, telefone, senha);
+
+            return res.status(201).json({
+                success: true,
+                message: 'Conta criada com sucesso e login efetuado.',
+                token: result.token,
+                user: result.user
+            });
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message || 'Erro ao realizar o cadastro.'
+            });
+        }
+    }
+
     // Middleware de verificação de token (usado para rotas protegidas)
     static verificarTokenMiddleware(req, res, next) {
         const authHeader = req.headers.authorization;

@@ -13,6 +13,9 @@ class FinanceiroController {
 
     async gerarRelatorio(req, res) {
         try {
+            if (req.user && req.user.role !== 'ADMIN') {
+                return res.status(403).json({ success: false, message: 'Acesso negado. Apenas administradores podem gerar relatórios financeiros.' });
+            }
             const { inicio, fim } = req.query;
             if (!inicio || !fim) {
                 return res.status(400).json({
@@ -30,6 +33,9 @@ class FinanceiroController {
 
     async listarTransacoes(req, res) {
         try {
+            if (req.user && req.user.role !== 'ADMIN') {
+                return res.status(403).json({ success: false, message: 'Acesso negado.' });
+            }
             const searchQuery = req.query.search || '';
             const transacoes = await financeiroService.listarTodos(searchQuery);
             return res.status(200).json({ success: true, data: transacoes });
@@ -40,6 +46,9 @@ class FinanceiroController {
 
     async criarDespesaReceita(req, res) {
         try {
+            if (req.user && req.user.role !== 'ADMIN') {
+                return res.status(403).json({ success: false, message: 'Acesso negado.' });
+            }
             const { tipo, valor, descricao, data } = req.body;
 
             if (!tipo || !['RECEITA', 'DESPESA'].includes(tipo)) {
@@ -78,6 +87,9 @@ class FinanceiroController {
 
     async excluirTransacao(req, res) {
         try {
+            if (req.user && req.user.role !== 'ADMIN') {
+                return res.status(403).json({ success: false, message: 'Acesso negado.' });
+            }
             const id = parseInt(req.params.id);
             await financeiroService.excluir(id);
             return res.status(200).json({

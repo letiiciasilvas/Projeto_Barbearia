@@ -1,16 +1,6 @@
 -- Habilitar integridade de chaves estrangeiras
 PRAGMA foreign_keys = ON;
 
--- Tabela de Usuários (Acesso ao Sistema)
-CREATE TABLE IF NOT EXISTS usuarios (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL,
-    senha TEXT NOT NULL, -- Hash PBKDF2
-    role TEXT NOT NULL DEFAULT 'OPERADOR', -- 'ADMIN' ou 'OPERADOR'
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
 -- Tabela de Clientes
 CREATE TABLE IF NOT EXISTS clientes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,6 +8,18 @@ CREATE TABLE IF NOT EXISTS clientes (
     email TEXT,
     telefone TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de Usuários (Acesso ao Sistema)
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    senha TEXT NOT NULL, -- Hash PBKDF2
+    role TEXT NOT NULL DEFAULT 'OPERADOR', -- 'ADMIN', 'OPERADOR' ou 'CLIENTE'
+    cliente_id INTEGER, -- Associado apenas se role = 'CLIENTE'
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
 );
 
 -- Tabela de Colaboradores (Barbeiros)
@@ -35,6 +37,7 @@ CREATE TABLE IF NOT EXISTS servicos (
     nome TEXT NOT NULL,
     preco REAL NOT NULL,
     duracao INTEGER NOT NULL, -- Duração em minutos
+    imagem TEXT, -- Caminho relativo para a foto do serviço
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

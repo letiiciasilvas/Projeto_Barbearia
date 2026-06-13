@@ -11,6 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (user) {
         document.getElementById('profileName').innerText = user.nome;
         document.getElementById('profileRole').innerText = user.role === 'ADMIN' ? 'Administrador' : 'Atendente';
+        
+        if (user.role !== 'ADMIN') {
+            // Esconder botões/links do sidebar
+            document.querySelectorAll('.nav-link[data-tab="colaboradores"]').forEach(el => el.parentElement.style.display = 'none');
+            document.querySelectorAll('.nav-link[data-tab="agendamentos"]').forEach(el => el.parentElement.style.display = 'none');
+            document.querySelectorAll('.nav-link[data-tab="relatorios"]').forEach(el => el.parentElement.style.display = 'none');
+        }
     }
 
     // Configurar a data de hoje no header
@@ -65,6 +72,12 @@ function configurarDataHoje() {
 
 // Alternar abas (SPA)
 function switchTab(tabName) {
+    const user = getLoggedUser();
+    if (user && user.role !== 'ADMIN' && ['colaboradores', 'agendamentos', 'relatorios'].includes(tabName)) {
+        showToast('Acesso restrito para administradores.', 'error');
+        return;
+    }
+
     currentTab = tabName;
 
     // Atualizar menu sidebar

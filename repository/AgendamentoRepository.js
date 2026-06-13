@@ -32,13 +32,30 @@ class AgendamentoRepository extends BaseRepository {
                    OR a.data_hora LIKE ?
                    OR c.telefone LIKE ?
             `;
-            // 6 parâmetros para os 6 campos
             params.push(pattern, pattern, pattern, pattern, pattern, pattern);
         }
 
         sql += ` ORDER BY a.data_hora DESC`;
 
         const rows = await this.dbQuery.all(sql, params);
+        return rows.map(row => Agendamento.fromRow(row));
+    }
+
+    async findByClienteId(clienteId) {
+        const sql = `
+            SELECT 
+                a.*,
+                c.nome AS cliente_nome, c.email AS cliente_email, c.telefone AS cliente_telefone,
+                colab.nome AS colaborador_nome, colab.especialidade AS colaborador_especialidade, colab.telefone AS colaborador_telefone,
+                s.nome AS servico_nome, s.preco AS servico_preco, s.duracao AS servico_duracao
+            FROM agendamentos a
+            JOIN clientes c ON a.cliente_id = c.id
+            JOIN colaboradores colab ON a.colaborador_id = colab.id
+            JOIN servicos s ON a.servico_id = s.id
+            WHERE a.cliente_id = ?
+            ORDER BY a.data_hora DESC
+        `;
+        const rows = await this.dbQuery.all(sql, [clienteId]);
         return rows.map(row => Agendamento.fromRow(row));
     }
 
@@ -86,8 +103,6 @@ class AgendamentoRepository extends BaseRepository {
     }
 
     async findUpcoming(limit = 10) {
-        // Encontra agendamentos pendentes ordenados por data decrescente ou crescente?
-        // Crescente é melhor para os "próximos" agendamentos (mais próximos primeiro)
         const sql = `
             SELECT 
                 a.*,

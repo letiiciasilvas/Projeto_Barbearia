@@ -3,46 +3,46 @@ DELETE FROM financeiro;
 DELETE FROM agendamentos;
 DELETE FROM servicos;
 DELETE FROM colaboradores;
-DELETE FROM clientes;
 DELETE FROM usuarios;
+DELETE FROM clientes;
 
 -- Resetar contadores de AUTOINCREMENT
 DELETE FROM sqlite_sequence WHERE name IN ('usuarios', 'clientes', 'colaboradores', 'servicos', 'agendamentos', 'financeiro');
 
--- Inserir Usuários (senha default: admin123, hash: salt:hash)
-INSERT INTO usuarios (nome, email, senha, role) VALUES 
-('Admin Fio da Navalha', 'admin@fiodanavalha.com.br', '0cf6d83becc5ada7da39001a65741a86:c37fdb72250fcd4db68ef3927e3028c9102117b93fb1a60df9b36535f6db7db44fbb438636381464a18698adf6f412bea7625724a2ca57047f3d1a61909ebc9f', 'ADMIN'),
-('Atendente Fio da Navalha', 'atendente@fiodanavalha.com.br', '0cf6d83becc5ada7da39001a65741a86:c37fdb72250fcd4db68ef3927e3028c9102117b93fb1a60df9b36535f6db7db44fbb438636381464a18698adf6f412bea7625724a2ca57047f3d1a61909ebc9f', 'OPERADOR'),
-('Leticia Gomes', 'leticia123silvas@gmail.com', '949a006297aa749d7fc0005b825dc272:0a2c13a44d0de024a6eb79b06767870ef88298bd6eebf00157730463d4aa642a9ee3dd8b029e55f4225663175131a8ad947fdda24ab9f1e5eb626b64c964a182', 'ADMIN');
-
 -- Inserir Clientes
-INSERT INTO clientes (nome, email, telefone) VALUES 
-('Carlos Silva', 'carlos.silva@email.com', '(11) 98888-1111'),
-('Marcos Souza', 'marcos.souza@email.com', '(11) 98888-2222'),
-('Lucas Pereira', 'lucas.pereira@email.com', '(11) 98888-3333'),
-('Felipe Rodrigues', 'felipe.r@email.com', '(11) 97777-4444'),
-('Rodrigo Alves', 'rodrigo.alves@email.com', '(11) 96666-5555'),
-('Gabriel Costa', 'gabriel.costa@email.com', '(11) 95555-6666'),
-('Thiago Santos', 'thiago.santos@email.com', '(11) 94444-7777');
+INSERT INTO clientes (id, nome, email, telefone) VALUES 
+(1, 'Carlos Silva', 'carlos.silva@email.com', '(11) 98888-1111'),
+(2, 'Marcos Souza', 'marcos.souza@email.com', '(11) 98888-2222'),
+(3, 'Lucas Pereira', 'lucas.pereira@email.com', '(11) 98888-3333'),
+(4, 'Felipe Rodrigues', 'felipe.r@email.com', '(11) 97777-4444'),
+(5, 'Rodrigo Alves', 'rodrigo.alves@email.com', '(11) 96666-5555'),
+(6, 'Gabriel Costa', 'gabriel.costa@email.com', '(11) 95555-6666'),
+(7, 'Thiago Santos', 'thiago.santos@email.com', '(11) 94444-7777');
+
+-- Inserir Usuários (senha default: admin123 para admins, carlos123 para carlos)
+INSERT INTO usuarios (nome, email, senha, role, cliente_id) VALUES 
+('Admin Fio da Navalha', 'admin@fiodanavalha.com.br', '0cf6d83becc5ada7da39001a65741a86:c37fdb72250fcd4db68ef3927e3028c9102117b93fb1a60df9b36535f6db7db44fbb438636381464a18698adf6f412bea7625724a2ca57047f3d1a61909ebc9f', 'ADMIN', NULL),
+('Atendente Fio da Navalha', 'atendente@fiodanavalha.com.br', '0cf6d83becc5ada7da39001a65741a86:c37fdb72250fcd4db68ef3927e3028c9102117b93fb1a60df9b36535f6db7db44fbb438636381464a18698adf6f412bea7625724a2ca57047f3d1a61909ebc9f', 'OPERADOR', NULL),
+('Leticia Gomes', 'leticia123silvas@gmail.com', '949a006297aa749d7fc0005b825dc272:0a2c13a44d0de024a6eb79b06767870ef88298bd6eebf00157730463d4aa642a9ee3dd8b029e55f4225663175131a8ad947fdda24ab9f1e5eb626b64c964a182', 'ADMIN', NULL),
+('Carlos Silva', 'carlos.silva@email.com', 'de81c9a61dd5ecd2cf74adf88beb6165:47e2fb2753caa7d44329e3048cf5c453a185267ed29af763f6e97caabe02a4df4d1668af51babff181fbafcd24942db77bd7eb3fa623318b030e3a8145554f13', 'CLIENTE', 1);
 
 -- Inserir Colaboradores (Barbeiros)
-INSERT INTO colaboradores (nome, especialidade, telefone) VALUES 
-('Rodolfo "Navalha" Santos', 'Corte & Barba', '(11) 99999-0001'),
-('Tiago "Degradê" Lima', 'Cortes Modernos', '(11) 99999-0002'),
-('Bruno "Barba" Costa', 'Barboterapia & Visagismo', '(11) 99999-0003');
+INSERT INTO colaboradores (id, nome, especialidade, telefone) VALUES 
+(1, 'Rodolfo "Navalha" Santos', 'Corte & Barba', '(11) 99999-0001'),
+(2, 'Tiago "Degradê" Lima', 'Cortes Modernos', '(11) 99999-0002'),
+(3, 'Bruno "Barba" Costa', 'Barboterapia & Visagismo', '(11) 99999-0003');
 
 -- Inserir Serviços
-INSERT INTO servicos (nome, preco, duracao) VALUES 
-('Corte Masculino (Clássico)', 45.00, 30),
-('Corte Moderno (Degradê/Undercut)', 55.00, 40),
-('Barba Clássica (Navalha e Toalha Quente)', 35.00, 30),
-('Barboterapia (Tratamento Completo)', 50.00, 45),
-('Cabelo + Barba (Combo)', 85.00, 60),
-('Pigmentação de Cabelo/Barba', 40.00, 30),
-('Selagem / Progressiva', 90.00, 90);
+INSERT INTO servicos (id, nome, preco, duracao, imagem) VALUES 
+(1, 'Corte Masculino (Clássico)', 45.00, 30, '/images/corte_masculino.webp'),
+(2, 'Corte Moderno (Degradê)', 55.00, 40, '/images/corte_degrade.webp'),
+(3, 'Barba Clássica (Navalha & Toalha Quente)', 35.00, 30, '/images/barba.webp'),
+(4, 'Barboterapia (Tratamento)', 50.00, 45, '/images/barboterapia.webp'),
+(5, 'Cabelo + Barba (Combo)', 85.00, 60, '/images/combo.webp'),
+(6, 'Pigmentação de Cabelo/Barba', 40.00, 30, '/images/pigmentacao.webp'),
+(7, 'Selagem / Progressiva', 90.00, 90, '/images/selagem.webp');
 
 -- Inserir Agendamentos (com datas variadas para simular receita e agendamentos futuros)
--- Nota: Usando datas relativas. Supondo ano corrente.
 INSERT INTO agendamentos (id, cliente_id, colaborador_id, servico_id, data_hora, status) VALUES 
 (1, 1, 1, 5, '2026-06-05 10:00:00', 'CONCLUIDO'),
 (2, 2, 2, 2, '2026-06-05 14:00:00', 'CONCLUIDO'),

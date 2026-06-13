@@ -26,6 +26,10 @@ class ColaboradorController {
 
     async criar(req, res) {
         try {
+            if (req.user && req.user.role !== 'ADMIN') {
+                return res.status(403).json({ success: false, message: 'Acesso negado. Apenas administradores podem gerenciar funcionários.' });
+            }
+
             const validation = ColaboradorDTO.validate(req.body);
             if (!validation.isValid) {
                 return res.status(400).json({ success: false, errors: validation.errors });
@@ -44,6 +48,10 @@ class ColaboradorController {
 
     async atualizar(req, res) {
         try {
+            if (req.user && req.user.role !== 'ADMIN') {
+                return res.status(403).json({ success: false, message: 'Acesso negado. Apenas administradores podem gerenciar funcionários.' });
+            }
+
             const id = parseInt(req.params.id);
             const validation = ColaboradorDTO.validate(req.body);
             if (!validation.isValid) {
@@ -63,6 +71,10 @@ class ColaboradorController {
 
     async excluir(req, res) {
         try {
+            if (req.user && req.user.role !== 'ADMIN') {
+                return res.status(403).json({ success: false, message: 'Acesso negado. Apenas administradores podem gerenciar funcionários.' });
+            }
+
             const id = parseInt(req.params.id);
             await colaboradorService.excluir(id);
             return res.status(200).json({

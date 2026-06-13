@@ -35,7 +35,7 @@ class AuthService {
 
         // Gerar token JWT (expira em 8 horas)
         const token = jwt.sign(
-            { id: user.id, nome: user.nome, email: user.email, role: user.role },
+            { id: user.id, nome: user.nome, email: user.email, role: user.role, cliente_id: user.cliente_id },
             JWT_SECRET,
             { expiresIn: '8h' }
         );
@@ -46,7 +46,41 @@ class AuthService {
                 id: user.id,
                 nome: user.nome,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                cliente_id: user.cliente_id
+            }
+        };
+    }
+
+    // Registra um novo cliente e retorna o token JWT de acesso imediato
+    async register(nome, email, telefone, password) {
+        // Verificar e-mail duplicado
+        const existingUser = await userRepo.findByEmail(email);
+        if (existingUser) {
+            throw new Error('Este endereço de e-mail já está sendo utilizado.');
+        }
+
+        // Criptografar senha
+        const hashedPassword = AuthService.hashPassword(password);
+
+        // Salvar no BD (retorna ids vinculados)
+        const ids = await userRepo.registrarCliente(nome, email, telefone, hashedPassword);
+
+        // Gerar token de acesso automático
+        const token = jwt.sign(
+            { id: ids.userId, nome, email, role: 'CLIENTE', cliente_id: ids.clienteId },
+            JWT_SECRET,
+            { expiresIn: '8h' }
+        );
+
+        return {
+            token,
+            user: {
+                id: ids.userId,
+                nome,
+                email,
+                role: 'CLIENTE',
+                cliente_id: ids.clienteId
             }
         };
     }

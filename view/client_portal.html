@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Cliente | Barbearia Fio Da Navalha</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilo Principal -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Script de Tema e Autenticação -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'light') {
+                document.documentElement.classList.add('light-theme');
+            }
+        })();
+    </script>
+    <!-- Script de Autenticação -->
+    <script src="/js/auth.js"></script>
+    <script>
+        // Travar se não for Cliente logado
+        const user = getLoggedUser();
+        if (user && user.role !== 'CLIENTE') {
+            window.location.href = '/dashboard.html';
+        }
+    </script>
+</head>
+<body class="client-portal-body">
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <div class="portal-layout">
+        <!-- HEADER DO PORTAL -->
+        <header class="portal-header">
+            <div class="header-left">
+                <a href="/" class="logo" style="text-decoration: none;">
+                    <i class="fa-solid fa-scissors"></i>
+                    <span>Fio Da Navalha</span>
+                </a>
+                <span class="portal-badge">Área do Cliente</span>
+            </div>
+            
+            <div class="header-right">
+                <div class="client-profile" style="display: flex; align-items: center; gap: 15px;">
+                    <!-- Botão de Alternar Tema -->
+                    <button class="btn btn-secondary btn-sm btn-theme-toggle" title="Alternar Tema" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;">
+                        <i class="fa-solid fa-moon theme-toggle-icon"></i>
+                    </button>
+                    <span class="client-welcome">Olá, <strong id="clientName">Carregando...</strong></span>
+                    <button class="btn btn-secondary btn-sm" onclick="logout()">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- PORTAL CONTENT -->
+        <main class="portal-content-body">
+            
+            <!-- SECTION 1: AGENDAR HORÁRIO -->
+            <section class="portal-section card-glass" style="margin-bottom: 30px; padding: 25px;">
+                <div class="section-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px;">
+                    <h2><i class="fa-solid fa-calendar-plus text-blue"></i> Agendar Novo Horário</h2>
+                    <p class="text-muted" style="font-size: 0.85rem; margin-top: 4px;">Escolha o serviço, o profissional e o melhor dia/hora para você.</p>
+                </div>
+
+                <form id="formAgendamentoCliente" class="client-booking-flow">
+                    <!-- PASSO 1: SELECIONAR SERVIÇO -->
+                    <div class="booking-step">
+                        <h3>Passo 1: Selecione o Serviço</h3>
+                        <div class="booking-services-grid" id="bookingServicesGrid">
+                            <!-- Injetado dinamicamente com fotos -->
+                            <p class="text-muted">Carregando serviços...</p>
+                        </div>
+                        <input type="hidden" id="selectedServicoId" required>
+                    </div>
+
+                    <!-- PASSO 2 E 3: BARBEIRO E DATA-HORA -->
+                    <div class="booking-grid-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px;">
+                        <div class="booking-step">
+                            <h3>Passo 2: Escolha o Barbeiro</h3>
+                            <div class="form-group">
+                                <select id="bookingColaborador" class="form-control" style="padding-left: 15px;" required>
+                                    <option value="">Selecione um profissional...</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="booking-step">
+                            <h3>Passo 3: Escolha o Dia e Horário</h3>
+                            <div class="form-group">
+                                <input type="datetime-local" id="bookingDataHora" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="booking-actions" style="margin-top: 30px; text-align: right;">
+                        <button type="submit" class="btn btn-primary btn-lg" style="min-width: 200px;">
+                            <i class="fa-regular fa-calendar-check"></i> Confirmar Agendamento
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- SECTION 2: MEUS AGENDAMENTOS -->
+            <section class="portal-section table-card">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-clock-rotate-left text-blue"></i> Meus Agendamentos Realizados</h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="table" id="tableMeusAgendamentos">
+                        <thead>
+                            <tr>
+                                <th>Serviço</th>
+                                <th>Preço</th>
+                                <th>Barbeiro</th>
+                                <th>Data & Horário</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">Carregando seus agendamentos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL CONFIRMAÇÃO DE CANCELAMENTO -->
+    <div class="modal-backdrop d-none" id="modalCancelClient">
+        <div class="modal-card modal-sm">
+            <div class="modal-header bg-danger-soft">
+                <h2 class="text-red">Cancelar Horário</h2>
+                <button class="btn-close-modal" onclick="closeCancelModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body text-center" style="padding: 20px 10px;">
+                <i class="fa-solid fa-ban text-red" style="font-size: 2.5rem; margin-bottom: 15px;"></i>
+                <p>Tem certeza que deseja cancelar seu horário agendado?</p>
+                <p class="text-muted" style="font-size: 0.8rem; margin-top: 5px;">Seu barbeiro será notificado sobre a liberação da agenda.</p>
+            </div>
+            <div class="modal-footer" style="justify-content: center;">
+                <button type="button" class="btn btn-secondary" onclick="closeCancelModal()">Não, Voltar</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmCancelClient">Sim, Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/client.js"></script>
+</body>
+</html>

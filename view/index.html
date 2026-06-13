@@ -2,20 +2,200 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Barbearia Fio Da Navalha</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbearia Fio Da Navalha | Agendamento Online</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilo Principal -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Script de Tema e Autenticação -->
     <script>
-        // Redirecionador rápido de sessão
-        const token = localStorage.getItem('fio_navalha_token');
-        if (token) {
-            window.location.href = '/dashboard.html';
-        } else {
-            window.location.href = '/login.html';
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'light') {
+                document.documentElement.classList.add('light-theme');
+            }
+        })();
+    </script>
+    <script src="/js/auth.js"></script>
+</head>
+<body class="landing-body">
+
+    <!-- HERO SECTION / HEADER -->
+    <header class="landing-hero">
+        <div class="landing-navbar">
+            <div class="logo">
+                <i class="fa-solid fa-scissors"></i>
+                <span>Fio Da Navalha</span>
+            </div>
+            <div class="nav-buttons" style="display: flex; align-items: center; gap: 10px;">
+                <!-- Botão de Alternar Tema -->
+                <button class="btn btn-secondary btn-sm btn-theme-toggle" title="Alternar Tema" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--border-color); background: transparent; color: var(--text-primary);">
+                    <i class="fa-solid fa-moon theme-toggle-icon"></i>
+                </button>
+                <a href="/login.html" class="btn btn-secondary btn-sm"><i class="fa-solid fa-user-gear"></i> Painel Admin</a>
+                <a href="/login.html" class="btn btn-primary btn-sm"><i class="fa-solid fa-user"></i> Painel Cliente</a>
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <h1>Fio Da Navalha</h1>
+            <p class="hero-subtitle">Corte clássico, estilo moderno e atendimento de primeira.</p>
+            
+            <!-- INDICADOR ABERTO / FECHADO DINÂMICO -->
+            <div class="status-indicator" id="statusIndicator">
+                <span class="badge" id="statusBadge">Carregando status...</span>
+            </div>
+
+            <div class="hero-actions">
+                <a href="/login.html" class="btn btn-primary btn-lg"><i class="fa-regular fa-calendar-check"></i> Fazer Agendamento Online</a>
+                <a href="#servicos" class="btn btn-secondary btn-lg">Conhecer Serviços</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- INFORMAÇÕES DE ATENDIMENTO & LOCALIZAÇÃO -->
+    <section class="landing-info">
+        <div class="info-card">
+            <i class="fa-solid fa-clock"></i>
+            <h3>Horário de Funcionamento</h3>
+            <p>Segunda a Sábado</p>
+            <p><strong>Das 08:00 às 21:00</strong></p>
+        </div>
+        <div class="info-card animate-pulse">
+            <i class="fa-solid fa-phone"></i>
+            <h3>Contato / WhatsApp</h3>
+            <p>Fale conosco ou tire suas dúvidas:</p>
+            <p><strong>(11) 98888-9999</strong></p>
+        </div>
+        <div class="info-card">
+            <i class="fa-solid fa-envelope"></i>
+            <h3>E-mail Oficial</h3>
+            <p>Dúvidas e contatos comerciais:</p>
+            <p><strong>contato@fiodanavalha.com.br</strong></p>
+        </div>
+    </section>
+
+    <!-- CATÁLOGO DE SERVIÇOS COM IMAGENS -->
+    <section class="landing-services" id="servicos">
+        <div class="section-title">
+            <h2>Nossos Serviços Disponíveis</h2>
+            <p>Estilo e cuidados especiais com os melhores profissionais da região.</p>
+        </div>
+
+        <div class="services-catalog-grid" id="catalogGrid">
+            <!-- Povoado via JavaScript com fotos e descrições dos serviços reais -->
+            <div class="text-center text-muted" style="grid-column: 1 / -1; padding: 40px;">
+                Carregando catálogo de serviços...
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="landing-footer">
+        <div class="footer-content">
+            <div class="logo">
+                <i class="fa-solid fa-scissors"></i>
+                <span>Fio Da Navalha</span>
+            </div>
+            <p>© 2026 Barbearia Fio Da Navalha. Todos os direitos reservados.</p>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">Desenvolvido por Leticia Gomes</p>
+        </div>
+    </footer>
+
+    <!-- LOGICA DINÂMICA DE ABERTO / FECHADO E CATÁLOGO -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            atualizarStatusFuncionamento();
+            carregarCatalogoLanding();
+            // Atualizar status a cada 30 segundos
+            setInterval(atualizarStatusFuncionamento, 30000);
+        });
+
+        function atualizarStatusFuncionamento() {
+            const statusBadge = document.getElementById('statusBadge');
+            const agora = new Date();
+            const diaSemana = agora.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
+            const hora = agora.getHours();
+            const minutos = agora.getMinutes();
+
+            // Aberto de Segunda (1) a Sábado (6) das 08:00 às 21:00
+            const estaAbertoDia = (diaSemana >= 1 && diaSemana <= 6);
+            const horaAtualFloat = hora + (minutos / 60);
+            const estaAbertoHora = (horaAtualFloat >= 8 && horaAtualFloat < 21);
+
+            if (estaAbertoDia && estaAbertoHora) {
+                statusBadge.className = 'badge badge-success animate-pulse-green';
+                statusBadge.innerHTML = '<i class="fa-solid fa-circle-check"></i> Aberto Agora';
+            } else {
+                statusBadge.className = 'badge badge-danger';
+                statusBadge.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Fechado Agora';
+            }
+        }
+
+        async function carregarCatalogoLanding() {
+            try {
+                // Fazer requisição pública de serviços (vamos usar endpoint normal, se der erro de auth mockamos ou liberamos)
+                const res = await fetch('/api/servicos');
+                
+                // Se der erro de autorização por requisição pública, usamos o catálogo padrão mockado para visitantes!
+                let data = [];
+                if (res.status === 401 || res.status === 403) {
+                    // Dados mockados de segurança para o visitante ver imediatamente
+                    data = [
+                        { nome: 'Corte Masculino (Clássico)', preco: 45.0, duracao: 30, imagem: '/images/corte_masculino.webp', desc: 'Corte clássico tesoura ou máquina com acabamento perfilado.' },
+                        { nome: 'Corte Moderno (Degradê)', preco: 55.0, duracao: 40, imagem: '/images/corte_degrade.webp', desc: 'Disface fade moderno lateral, degradê limpo e estilizado.' },
+                        { nome: 'Barba Clássica (Navalha & Toalha Quente)', preco: 35.0, duracao: 30, imagem: '/images/barba.webp', desc: 'Barba desenhada com navalha tradicional e massagem com toalha aquecida.' },
+                        { nome: 'Barboterapia (Tratamento)', preco: 50.0, duracao: 45, imagem: '/images/barboterapia.webp', desc: 'Limpeza facial profunda, hidratação de pelos e corte de barba.' },
+                        { nome: 'Cabelo + Barba (Combo)', preco: 85.0, duracao: 60, imagem: '/images/combo.webp', desc: 'Nosso combo campeão: cabelo no degradê e barba clássica com toalha quente.' },
+                        { nome: 'Selagem / Progressiva', preco: 90.0, duracao: 90, imagem: '/images/selagem.webp', desc: 'Alinhamento térmico capilar, redução de volume e frizz masculino.' }
+                    ];
+                } else {
+                    const result = await res.json();
+                    data = result.data;
+                }
+
+                const grid = document.getElementById('catalogGrid');
+                grid.innerHTML = '';
+
+                data.forEach(s => {
+                    // Descrições padrão para preencher o visual
+                    const descricoes = {
+                        'Corte Masculino (Clássico)': 'Corte tradicional na tesoura ou máquina com acabamento de alta precisão.',
+                        'Corte Moderno (Degradê)': 'Fade degradê moderno, com transição suave e linhas marcadas.',
+                        'Barba Clássica (Navalha & Toalha Quente)': 'Barba feita na navalha com creme hidratante e toalha aquecida relaxing.',
+                        'Barboterapia (Tratamento)': 'Tratamento completo para os fios da barba com óleos essenciais e toalha quente.',
+                        'Cabelo + Barba (Combo)': 'Cabelo e barba completos com preço promocional e acabamento premium.',
+                        'Pigmentação de Cabelo/Barba': 'Preenchimento e disfarce de falhas com tintura suave de longa duração.',
+                        'Selagem / Progressiva': 'Tratamento químico redutor de volume para fios lisos e alinhados.'
+                    };
+
+                    const descricao = s.desc || descricoes[s.nome] || 'Serviço profissional realizado com insumos importados e atendimento vip.';
+                    const imgUrl = s.imagem || '/images/corte_masculino.webp';
+
+                    const card = document.createElement('div');
+                    card.className = 'service-catalog-card';
+                    card.innerHTML = `
+                        <div class="service-card-image" style="background-image: url('${imgUrl}')"></div>
+                        <div class="service-card-details">
+                            <h3>${s.nome}</h3>
+                            <p class="service-desc">${descricao}</p>
+                            <div class="service-card-footer">
+                                <span class="service-price">R$ ${Number(s.preco).toFixed(2)}</span>
+                                <span class="service-duration"><i class="fa-regular fa-clock"></i> ${s.duracao} min</span>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (err) {
+                console.error('Erro ao carregar catálogo na landing page:', err);
+            }
         }
     </script>
-</head>
-<body>
-    <p style="text-align: center; margin-top: 50px; font-family: sans-serif; color: #666;">
-        Carregando sistema...
-    </p>
 </body>
 </html>

@@ -15,6 +15,10 @@ class AgendamentoService {
         return agendamentoRepo.findAll(searchQuery);
     }
 
+    async listarPorCliente(clienteId) {
+        return agendamentoRepo.findByClienteId(clienteId);
+    }
+
     async buscarPorId(id) {
         const agendamento = await agendamentoRepo.findById(id);
         if (!agendamento) {

@@ -39,3 +39,31 @@ function getLoggedUser() {
         return null;
     }
 }
+
+// ==================== CONTROLE DE TEMA (CLARO / ESCURO) ====================
+
+function toggleTheme() {
+    const isLight = document.documentElement.classList.toggle('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    atualizarIconesTema();
+}
+
+function atualizarIconesTema() {
+    const isLight = document.documentElement.classList.contains('light-theme');
+    const icons = document.querySelectorAll('.theme-toggle-icon');
+    icons.forEach(icon => {
+        if (isLight) {
+            icon.className = 'fa-solid fa-sun theme-toggle-icon';
+        } else {
+            icon.className = 'fa-solid fa-moon theme-toggle-icon';
+        }
+    });
+}
+
+// Inicializar quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', () => {
+    atualizarIconesTema();
+    document.querySelectorAll('.btn-theme-toggle').forEach(btn => {
+        btn.addEventListener('click', toggleTheme);
+    });
+});

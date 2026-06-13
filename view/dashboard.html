@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Gestão | Fio Da Navalha</title>
+    <title>Painel Administrativo | Fio Da Navalha</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,8 +14,24 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Estilo Principal -->
     <link rel="stylesheet" href="/css/style.css">
+    <!-- Script de Tema e Autenticação -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'light') {
+                document.documentElement.classList.add('light-theme');
+            }
+        })();
+    </script>
     <!-- Script de Autenticação -->
     <script src="/js/auth.js"></script>
+    <script>
+        // Restringir acesso apenas a ADMIN e OPERADOR
+        const user = getLoggedUser();
+        if (user && user.role === 'CLIENTE') {
+            window.location.href = '/client_portal.html';
+        }
+    </script>
 </head>
 <body class="dashboard-body">
 
@@ -26,7 +42,7 @@
         <!-- MENU LATERAL -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <div class="logo">
+                <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
                     <i class="fa-solid fa-scissors"></i>
                     <span>Fio Da Navalha</span>
                 </div>
@@ -52,7 +68,7 @@
                     <li>
                         <a href="#" class="nav-link" data-tab="colaboradores">
                             <i class="fa-solid fa-user-tie"></i>
-                            <span>Colaboradores</span>
+                            <span>Funcionários</span>
                         </a>
                     </li>
                     <li>
@@ -101,7 +117,11 @@
                     </button>
                     <h1 id="pageTitle">Dashboard</h1>
                 </div>
-                <div class="header-right">
+                <div class="header-right" style="display: flex; align-items: center; gap: 15px;">
+                    <!-- Botão de Alternar Tema -->
+                    <button class="btn btn-secondary btn-sm btn-theme-toggle" title="Alternar Tema" style="width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;">
+                        <i class="fa-solid fa-moon theme-toggle-icon"></i>
+                    </button>
                     <div class="date-today" id="headerDate">Quinta, 11 de Junho de 2026</div>
                 </div>
             </header>
@@ -125,7 +145,7 @@
                                 <i class="fa-solid fa-user-tie text-indigo"></i>
                             </div>
                             <div class="metric-data">
-                                <h3>Colaboradores</h3>
+                                <h3>Funcionários</h3>
                                 <span class="metric-value" id="cardColaboradores">0</span>
                             </div>
                         </div>
@@ -206,7 +226,7 @@
                                         <th>Profissional</th>
                                         <th>Serviço</th>
                                         <th>Data & Hora</th>
-                                        <th>Ações rápida</th>
+                                        <th>Ações rápidas</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -251,15 +271,15 @@
                     </div>
                 </section>
 
-                <!-- ==================== TAB: COLABORADORES ==================== -->
+                <!-- ==================== TAB: FUNCIONÁRIOS (COLABORADORES) ==================== -->
                 <section id="tab-colaboradores" class="tab-panel d-none">
                     <div class="search-action-bar">
                         <div class="search-box">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="searchColaboradores" placeholder="Buscar por Nome, Especialidade...">
+                            <input type="text" id="searchColaboradores" placeholder="Buscar funcionário por nome, especialidade...">
                         </div>
                         <button class="btn btn-primary" onclick="openColaboradorModal()">
-                            <i class="fa-solid fa-plus"></i> Novo Colaborador
+                            <i class="fa-solid fa-plus"></i> Adicionar Funcionário
                         </button>
                     </div>
 
@@ -471,11 +491,11 @@
         </div>
     </div>
 
-    <!-- MODAL: COLABORADOR -->
+    <!-- MODAL: FUNCIONÁRIO -->
     <div class="modal-backdrop d-none" id="modalColaborador">
         <div class="modal-card">
             <div class="modal-header">
-                <h2 id="colaboradorModalTitle">Novo Colaborador</h2>
+                <h2 id="colaboradorModalTitle">Adicionar Funcionário</h2>
                 <button class="btn-close-modal" onclick="closeModal('modalColaborador')">
                     <i class="fa-solid fa-xmark"></i>
                 </button>

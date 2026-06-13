@@ -7,7 +7,16 @@ class AgendamentoController {
     async listar(req, res) {
         try {
             const searchQuery = req.query.search || '';
-            const agendamentos = await agendamentoService.listarTodos(searchQuery);
+            let agendamentos;
+
+            if (req.user && req.user.role === 'CLIENTE') {
+                agendamentos = await agendamentoService.listarPorCliente(req.user.cliente_id);
+            } else if (req.user && req.user.role === 'ADMIN') {
+                agendamentos = await agendamentoService.listarTodos(searchQuery);
+            } else {
+                return res.status(403).json({ success: false, message: 'Acesso negado. Apenas administradores podem ver a lista de agendamentos.' });
+            }
+
             return res.status(200).json({ success: true, data: agendamentos });
         } catch (error) {
             return res.status(500).json({ success: false, message: error.message });
@@ -18,6 +27,12 @@ class AgendamentoController {
         try {
             const id = parseInt(req.params.id);
             const agendamento = await agendamentoService.buscarPorId(id);
+
+            // Validar acesso se for cliente
+            if (req.user && req.user.role === 'CLIENTE' && agendamento.cliente_id !== req.user.cliente_id) {
+                return res.status(403).json({ success: false, message: 'Acesso negado.' });
+            }
+
             return res.status(200).json({ success: true, data: agendamento });
         } catch (error) {
             return res.status(404).json({ success: false, message: error.message });
@@ -26,6 +41,12 @@ class AgendamentoController {
 
     async criar(req, res) {
         try {
+            // Se for cliente, injetar o cliente_id do token e status PENDENTE
+            if (req.user && req.user.role === 'CLIENTE') {
+                req.body.cliente_id = req.user.cliente_id;
+                req.body.status = 'PENDENTE';
+            }
+
             const validation = AgendamentoDTO.validate(req.body);
             if (!validation.isValid) {
                 return res.status(400).json({ success: false, errors: validation.errors });
@@ -45,6 +66,12 @@ class AgendamentoController {
     async atualizar(req, res) {
         try {
             const id = parseInt(req.params.id);
+
+            // Se for cliente, impedir alteração genérica (devem usar a rota de status para cancelar)
+            if (req.user && req.user.role === 'CLIENTE') {
+                return res.status(403).json({ success: false, message: 'Operação não permitida.' });
+            }
+
             const validation = AgendamentoDTO.validate(req.body);
             if (!validation.isValid) {
                 return res.status(400).json({ success: false, errors: validation.errors });
@@ -73,6 +100,17 @@ class AgendamentoController {
                 });
             }
 
+            // Validar se o cliente está cancelando seu próprio agendamento
+            if (req.user && req.user.role === 'CLIENTE') {
+                const agenda = await agendamentoService.buscarPorId(id);
+                if (agenda.cliente_id !== req.user.cliente_id) {
+                    return res.status(403).json({ success: false, message: 'Acesso negado. Este agendamento pertence a outro cliente.' });
+                }
+                if (status !== 'CANCELADO') {
+                    return res.status(400).json({ success: false, message: 'Operação inválida. Clientes só podem cancelar agendamentos.' });
+                }
+            }
+
             await agendamentoService.atualizarStatus(id, status);
             return res.status(200).json({
                 success: true,
@@ -86,6 +124,12 @@ class AgendamentoController {
     async excluir(req, res) {
         try {
             const id = parseInt(req.params.id);
+
+            // Impedir exclusão por clientes
+            if (req.user && req.user.role === 'CLIENTE') {
+                return res.status(403).json({ success: false, message: 'Operação não permitida para clientes.' });
+            }
+
             await agendamentoService.excluir(id);
             return res.status(200).json({
                 success: true,
