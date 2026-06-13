@@ -185,6 +185,16 @@
             }
         }
 
+        // Garantir que os campos de login comecem limpos para o cliente adicionar seu próprio e-mail
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const emailInput = document.getElementById('email');
+                const senhaInput = document.getElementById('senha');
+                if (emailInput) emailInput.value = '';
+                if (senhaInput) senhaInput.value = '';
+            }, 50);
+        });
+
         // Mostrar senhas
         setupPasswordToggle('#togglePasswordLogin', '#senha');
         setupPasswordToggle('#togglePasswordRegister', '#regSenha');
